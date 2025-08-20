@@ -11,6 +11,11 @@ module "bastion_host" {
 
 module "networking" {
   source = "./modules/networking"
+  eip_id = module.bastion_host.eip_id
+  bastion_host_subnet_id = module.bastion_host.bastion_host_subnet_id
+  eip_allocation_id = module.bastion_host.eip_allocation_id
+  aws_nat_gateway_id =  module.bastion_host.nat_gateway_id
+  
 }
 
 module "eks" {

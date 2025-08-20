@@ -1,18 +1,15 @@
-
-module "networking" {
-  source = "../networking"
-}
-
 resource "aws_key_pair" "bastion-host-key-pair" {
   key_name   = "${keyname}"
   public_key = file("${path.module}${var.ec2-bastion-public-key-path}")
 }
+
 resource "aws_subnet" "ec2-bastion-subnet" {
   vpc_id                  = module.networking.aws_vpc.main.id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "10.0.2.0/24"
 
   tags = {
     Name = "bastion-host-subnet"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -46,6 +43,16 @@ resource "aws_security_group" "ec2-bastion-sg" {
   }
 }
 
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.ec2-bastion-host-eip.allocation_id
+  subnet_id = aws_subnet.ec2-bastion-subnet.id
+
+  tags = {
+    Name = "eks-nat-gateway"
+  }  
+  depends_on = [aws_internet_gateway.this]
+}
+
 resource "aws_internet_gateway" "this" {
   vpc_id = module.networking.aws_vpc.main.id
 }
@@ -62,15 +69,18 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-
-
 ## EC2 Bastion Host Elastic IP
 resource "aws_eip" "ec2-bastion-host-eip" {
-    vpc = true
+    domain = "vpc"
     tags = {
     Name = "test-ec2-bastion-host-eip-${var.environment}"
     }
     depends_on = [ aws_internet_gateway.this ]
+}
+
+resource "aws_eip_association" "ec2-bastion-host-eip-association" {
+    instance_id = aws_instance.ec2-bastion-host.id
+    allocation_id = aws_eip.ec2-bastion-host-eip.id
 }
 
 resource "aws_instance" "ec2-bastion-host" {
@@ -98,10 +108,4 @@ resource "aws_instance" "ec2-bastion-host" {
         associate_public_ip_address,
        ]
     }
-}
-
-## EC2 Bastion Host Elastic IP Association
-resource "aws_eip_association" "ec2-bastion-host-eip-association" {
-    instance_id = aws_instance.ec2-bastion-host.id
-    allocation_id = aws_eip.ec2-bastion-host-eip.id
 }

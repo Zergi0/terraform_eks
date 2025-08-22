@@ -90,7 +90,7 @@ resource "aws_instance" "ec2-bastion-host" {
     vpc_security_group_ids  = [ aws_security_group.ec2-bastion-sg.id ]
     subnet_id = aws_subnet.ec2-bastion-subnet.id
     associate_public_ip_address = false
-    user_data                   = file(var.bastion-bootstrap-script-path)
+    //user_data                   = file(var.bastion-bootstrap-script-path)
     root_block_device {
       volume_size = 8
       delete_on_termination = true

@@ -25,3 +25,11 @@ module "eks" {
     eip_id = module.bastion_host.eip_id
     vpc_id = module.networking.vpc_id
 }
+
+module "database" {
+    source = "./modules/database"
+    database_subnet_id = module.networking.database_subnet_id
+    private_subnet_id = module.networking.private_subnet_id
+    vpc_id = module.networking.vpc_id
+    eks_sg_node_id = module.eks.eks_sg_node_id
+}

@@ -7,14 +7,15 @@ resource "aws_vpc" "main" {
     Name = "main"
   }
 }
-resource "aws_subnet" "main" {
+resource "aws_subnet" "database" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.1.0/24"
 
   tags = {
-    Name = "main-subnet"
+    Name = "db-subnet"
   }
 }
+
 resource "aws_subnet" "private" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.3.0/24"
@@ -31,7 +32,7 @@ resource "aws_route_table" "private" {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = var.aws_nat_gateway_id
   }
-  
+
   tags = {
     Name = "private-route-table"
   }

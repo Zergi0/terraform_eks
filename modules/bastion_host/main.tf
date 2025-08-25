@@ -1,5 +1,5 @@
 resource "aws_key_pair" "bastion-host-key-pair" {
-  key_name   = "${keyname}"
+  key_name   = "${var.keyname}"
   public_key = file("${path.module}${var.ec2-bastion-public-key-path}")
 }
 
@@ -39,7 +39,7 @@ resource "aws_security_group" "ec2-bastion-sg" {
     description = "IPv4 route Open to Public Internet"
   }
   tags = {
-    Name = "bastikon-host-SG"
+    Name = "bastion-host-SG"
   }
 }
 

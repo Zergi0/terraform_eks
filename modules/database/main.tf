@@ -2,14 +2,14 @@ resource "aws_security_group" "db_sg" {
   name = "db-sg"
   vpc_id = var.vpc_id
 
-    ingress = {
+    ingress {
         description = "Allow EKS nodes to access db"
         from_port = "5432" //use db port
         to_port = "5432"
         protocol = "tcp"
         security_groups = [var.eks_sg_node_id]
     }
-    egress = {
+    egress {
         from_port   = 0
         to_port     = 0
         protocol    = "-1"

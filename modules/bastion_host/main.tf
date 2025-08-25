@@ -4,7 +4,7 @@ resource "aws_key_pair" "bastion-host-key-pair" {
 }
 
 resource "aws_subnet" "ec2-bastion-subnet" {
-  vpc_id                  = module.networking.aws_vpc.main.id
+  vpc_id                  = var.vpc_id
   cidr_block              = "10.0.2.0/24"
 
   tags = {
@@ -16,7 +16,7 @@ resource "aws_subnet" "ec2-bastion-subnet" {
 resource "aws_security_group" "ec2-bastion-sg" {
   description = "EC2 Bastion Host Security Group"
   name = "test-ec2-bastion-sg-${var.environment}"
-  vpc_id = module.networking.aws_vpc.main.id
+  vpc_id = var.vpc_id
   ingress {
     from_port = 22
     to_port = 22
@@ -54,11 +54,11 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_internet_gateway" "this" {
-  vpc_id = module.networking.aws_vpc.main.id
+  vpc_id = var.vpc_id
 }
 
 resource "aws_route_table" "public" {
-  vpc_id = module.networking.aws_vpc.main.id
+  vpc_id = var.vpc_id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
@@ -71,9 +71,9 @@ resource "aws_route_table_association" "public" {
 
 ## EC2 Bastion Host Elastic IP
 resource "aws_eip" "ec2-bastion-host-eip" {
-    domain = "vpc"
+    instance = aws_instance.ec2-bastion-host.id
     tags = {
-    Name = "test-ec2-bastion-host-eip-${var.environment}"
+      Name = "test-ec2-bastion-host-eip-${var.environment}"
     }
     depends_on = [ aws_internet_gateway.this ]
 }

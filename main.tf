@@ -1,11 +1,11 @@
 module "bastion_host" {
     source = "./modules/bastion_host"
-    project_name = project_name
-    keyname = keyname
-    environment = environment
-    ec2-bastion-public-key-path = ec2-bastion-public-key-path
-    ec2-bastion-ingress-ip-1 = ec2-bastion-ingress-ip-1
-    ec2-bastion-private-key-path = ec2-bastion-private-key-path
+    project_name = var.project_name
+    keyname = var.keyname
+    environment = var.environment
+    ec2-bastion-public-key-path = var.bastion_host_public_key
+    ec2-bastion-private-key-path = var.bastion_host_private_key
+    ec2-bastion-ingress-ip-1 = var.bastion_host_ingress_ip
     vpc_id = module.networking.vpc_id
 }
 

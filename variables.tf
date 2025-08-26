@@ -11,6 +11,7 @@ variable "keyname" {
 } 
 variable "bastion_host_ingress_ip" {
     type = string
+    sensitive = true
 }
 variable "environment" {
     type = string

@@ -32,4 +32,11 @@ module "database" {
     private_subnet_id = module.networking.private_subnet_id
     vpc_id = module.networking.vpc_id
     eks_sg_node_id = module.eks.eks_sg_node_id
+    db_port = var.db_port
+    db_name = var.db_name
+    db_engine = var.db_engine
+    db_engine_version = var.db_engine_version
+    db_username = var.db_username
+    db_pw = var.db_pw
+    db_parameter_group = var.db_parameter_group
 }

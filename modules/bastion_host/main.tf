@@ -1,6 +1,6 @@
 resource "aws_key_pair" "bastion-host-key-pair" {
   key_name   = "${var.keyname}"
-  public_key = file("${path.module}${var.ec2-bastion-public-key-path}")
+  public_key = file("${var.ec2-bastion-public-key-path}")
 }
 
 resource "aws_subnet" "ec2-bastion-subnet" {

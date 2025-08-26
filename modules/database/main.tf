@@ -4,8 +4,8 @@ resource "aws_security_group" "db_sg" {
 
     ingress {
         description = "Allow EKS nodes to access db"
-        from_port = "5432" //use db port
-        to_port = "5432"
+        from_port = var.db_port
+        to_port = var.db_port
         protocol = "tcp"
         security_groups = [var.eks_sg_node_id]
     }
@@ -20,13 +20,13 @@ resource "aws_security_group" "db_sg" {
 
 resource "aws_db_instance" "default" {
   allocated_storage    = 10
-  db_name              = "mydb"
-  engine               = "mysql"
-  engine_version       = "8.0"
+  db_name              = var.db_name
+  engine               = var.db_engine
+  engine_version       = var.db_engine_version
   instance_class       = "db.t3.micro"
-  username             = "foo" //TODO
-  password             = "foobarbaz"
-  parameter_group_name = "default.mysql8.0"
+  username             = var.db_username
+  password             = var.db_pw
+  parameter_group_name = var.db_parameter_group
   skip_final_snapshot  = true
   vpc_security_group_ids = [aws_security_group.db_sg.id, var.eks_sg_node_id]
   db_subnet_group_name = aws_db_subnet_group.main.name

@@ -10,7 +10,6 @@ output "eip_allocation_id" {
 output "eip_association_id" {
   value = aws_eip.ec2-bastion-host-eip.association_id
 }
-
 output "nat_gateway_id" {
     value = aws_nat_gateway.nat.id
 }

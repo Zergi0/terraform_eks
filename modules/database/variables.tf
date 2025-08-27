@@ -27,8 +27,8 @@ variable "db_username" {
     sensitive = true
 }
 variable "db_pw" {
-    type = string
-    sensitive = true
+    type        = string
+    sensitive   = true
 }
 variable "db_parameter_group" {
     type = string

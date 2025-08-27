@@ -24,7 +24,7 @@ resource "aws_iam_role" "eks_node" {
         Action = "sts:AssumeRole"
         Effect = "Allow"
         Principal = {
-          Service = "eks.amazonaws.com"
+          Service = "ec2.amazonaws.com"
         }
       },
     ]
@@ -40,10 +40,6 @@ resource "aws_iam_role_policy_attachment" "eks_service_policy" {
     role = aws_iam_role.eks_cluster.name
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
 }
-resource "aws_iam_role_policy_attachment" "eks_service_role_policy"{
-    role = aws_iam_role.eks_cluster.name
-    policy_arn = "arn:aws:iam::aws:policy/aws-service-role/AmazonEKSServiceRolePolicy"
-}
 
 resource "aws_iam_role_policy_attachment" "eks_worker_policy" {
     role = aws_iam_role.eks_node.name
@@ -54,7 +50,6 @@ resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
     role = aws_iam_role.eks_node.name
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
 }
-
 resource "aws_iam_role_policy_attachment" "ecr_read_policy" {
     role = aws_iam_role.eks_node.name
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
@@ -113,7 +108,7 @@ resource "aws_eks_cluster" "this" {
     }
     depends_on = [
         aws_iam_role_policy_attachment.eks_cluster_policy,
-        aws_iam_role_policy_attachment.eks_service_role_policy
+        aws_iam_role_policy_attachment.eks_service_policy
      ]
 }
 

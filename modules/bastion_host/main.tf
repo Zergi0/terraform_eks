@@ -6,6 +6,7 @@ resource "aws_key_pair" "bastion-host-key-pair" {
 resource "aws_subnet" "ec2-bastion-subnet" {
   vpc_id                  = var.vpc_id
   cidr_block              = "10.0.2.0/24"
+  availability_zone       =  "eu-west-2c"
 
   tags = {
     Name = "bastion-host-subnet"
@@ -43,16 +44,6 @@ resource "aws_security_group" "ec2-bastion-sg" {
   }
 }
 
-resource "aws_nat_gateway" "nat" {
-  allocation_id = aws_eip.ec2-bastion-host-eip.allocation_id
-  subnet_id = aws_subnet.ec2-bastion-subnet.id
-
-  tags = {
-    Name = "eks-nat-gateway"
-  }  
-  depends_on = [aws_internet_gateway.this]
-}
-
 resource "aws_internet_gateway" "this" {
   vpc_id = var.vpc_id
 }
@@ -69,13 +60,30 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-## EC2 Bastion Host Elastic IP
 resource "aws_eip" "ec2-bastion-host-eip" {
+
     instance = aws_instance.ec2-bastion-host.id
     tags = {
       Name = "test-ec2-bastion-host-eip-${var.environment}"
     }
     depends_on = [ aws_internet_gateway.this ]
+}
+resource "aws_eip" "nat-gateway-eip" {
+
+  tags = {
+    Name = "nat-eip-${var.environment}"
+  }
+  depends_on = [ aws_internet_gateway.this ]
+}
+
+resource "aws_nat_gateway" "nat" {
+  allocation_id = aws_eip.nat-gateway-eip.allocation_id
+  subnet_id = aws_subnet.ec2-bastion-subnet.id
+
+  tags = {
+    Name = "eks-nat-gateway"
+  }  
+  depends_on = [aws_internet_gateway.this]
 }
 
 resource "aws_eip_association" "ec2-bastion-host-eip-association" {

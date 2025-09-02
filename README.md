@@ -1,7 +1,13 @@
 # 🌐 Terraform EKS Infrastructure
 
-![Project Logo](images/logo.png)  
 *A scalable cloud infrastructure project with Terraform, AWS EKS, and RDS.*
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/Zergi0/terraform_eks/">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+</div>
 
 [![Contributors][contributors-shield]][contributors-url]  
 [![Forks][forks-shield]][forks-url]  

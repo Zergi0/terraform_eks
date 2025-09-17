@@ -14,3 +14,6 @@ variable "bastion_host_id" {
 variable "server_location" {
     type = string
 }
+variable "db_port" {
+    type = string
+}

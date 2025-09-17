@@ -16,3 +16,6 @@ variable "project_name" {
 variable "environment" {
     type = string
 }
+variable "eks_cluser_sg_id" {
+    type = string
+}

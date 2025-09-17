@@ -130,7 +130,82 @@ resource "aws_nat_gateway" "nat" {
   }  
   depends_on = [aws_internet_gateway.this]
 }
+
 resource "aws_eip_association" "ec2-bastion-host-eip-association" {
     instance_id     = var.bastion_host_id
     allocation_id   = aws_eip.ec2-bastion-host-eip.id
+}
+
+resource "aws_security_group" "db_sg" {
+  name    = "db-sg"
+  vpc_id  = aws_vpc.main.id
+
+    ingress {
+        description     = "Allow EKS nodes to access db"
+        from_port       = var.db_port
+        to_port         = var.db_port
+        protocol        = "tcp"
+        security_groups = [aws_security_group.eks_nodes.id]
+    }
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    tags = {
+        Name = "${var.project_name}-rds-sg-${var.environment}"
+    }
+}
+
+resource "aws_db_subnet_group" "main" {
+   name = "db-group"
+   subnet_ids = [aws_subnet.database.id, aws_subnet.private.id ]
+
+    tags = {
+        Name = "${var.project_name}-rds-subnet-group-${var.environment}"
+    }
+ }
+
+ resource "aws_security_group" "eks_cluster" {
+    vpc_id = aws_vpc.main.id
+    
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port       = 443
+        to_port         = 443
+        protocol        = "tcp"
+        security_groups = [aws_security_group.eks_nodes.id]
+        description     = "Allow worker nodes to communicate with control plane"
+    }
+    tags = {
+        Name = "${var.project_name}-eks-cluster-sg-${var.environment}"
+    }
+}
+
+resource "aws_security_group" "eks_nodes" {
+    vpc_id = aws_vpc.main.id
+
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    ingress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        self        = true
+    }
+    tags = {
+        Name = "${var.project_name}-eks-nodes-sg-${var.environment}"
+    }
 }

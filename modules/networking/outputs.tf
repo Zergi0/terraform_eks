@@ -25,3 +25,9 @@ output "nat_gateway_id" {
 output "bastion_host_sg_id" {
     value = aws_security_group.bastion_host_sg.id
 }
+output "db_subnet_group_name" {
+    value = aws_db_subnet_group.main.name
+}
+output "eks_cluser_sg_id" {
+    value = aws_security_group.eks_cluster.id
+}

@@ -11,3 +11,6 @@ variable "environment" {
 variable "bastion_host_id" {
     type = string
 }
+variable "server_location" {
+    type = string
+}

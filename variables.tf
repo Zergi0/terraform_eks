@@ -38,3 +38,6 @@ variable "db_pw" {
 variable "db_parameter_group" {
     type = string
 }
+variable "server_location" {
+    type = string
+}

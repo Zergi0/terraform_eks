@@ -72,9 +72,8 @@ resource "aws_security_group" "eks_cluster" {
         security_groups = [aws_security_group.eks_nodes.id]
         description     = "Allow worker nodes to communicate with control plane"
     }
-
     tags = {
-        Name = "eks-cluster-sg"
+        Name = "${var.project_name}-eks-cluster-sg-${var.environment}"
     }
 }
 
@@ -95,7 +94,7 @@ resource "aws_security_group" "eks_nodes" {
         self        = true
     }
     tags = {
-        Name = "eks-nodes-sg"
+        Name = "${var.project_name}-eks-nodes-sg-${var.environment}"
     }
 }
 resource "aws_eks_cluster" "this" {
@@ -110,6 +109,9 @@ resource "aws_eks_cluster" "this" {
         aws_iam_role_policy_attachment.eks_cluster_policy,
         aws_iam_role_policy_attachment.eks_service_policy
      ]
+    tags = {
+        Name = "${var.project_name}-eks-cluster-${var.environment}"
+    }
 }
 
 resource "aws_eks_node_group" "backend" {
@@ -135,4 +137,7 @@ resource "aws_eks_node_group" "backend" {
       aws_iam_role_policy_attachment.eks_worker_policy,
       aws_iam_role_policy_attachment.ecr_read_policy,
     ]
+    tags = {
+        Name = "${var.project_name}-eks-backend-nodes-${var.environment}"
+    }
 }

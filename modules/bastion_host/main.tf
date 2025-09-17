@@ -1,6 +1,9 @@
 resource "aws_key_pair" "bastion-host-key-pair" {
   key_name   = "${var.keyname}"
   public_key = file("${var.ec2-bastion-public-key-path}")
+  tags = {
+     Name = "${var.project_name}-aws-keypair-${var.environment}"
+  }
 }
 
 resource "aws_instance" "ec2-bastion-host" {

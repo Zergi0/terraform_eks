@@ -15,23 +15,34 @@ resource "aws_security_group" "db_sg" {
         protocol    = "-1"
         cidr_blocks = ["0.0.0.0/0"]
     }
+    tags = {
+        Name = "${var.project_name}-rds-sg-${var.environment}"
+    }
 }
 
 
 resource "aws_db_instance" "default" {
-  allocated_storage       = 10
-  db_name                 = var.db_name
-  engine                  = var.db_engine
-  engine_version          = var.db_engine_version
-  instance_class          = "db.t3.micro"
-  username                = var.db_username
-  password                = var.db_pw
-  parameter_group_name    = var.db_parameter_group
-  skip_final_snapshot     = true
-  vpc_security_group_ids  = [aws_security_group.db_sg.id, var.eks_sg_node_id]
-  db_subnet_group_name    = aws_db_subnet_group.main.name
+    allocated_storage       = 10
+    db_name                 = var.db_name
+    engine                  = var.db_engine
+    engine_version          = var.db_engine_version
+    instance_class          = "db.t3.micro"
+    username                = var.db_username
+    password                = var.db_pw
+    parameter_group_name    = var.db_parameter_group
+    skip_final_snapshot     = true
+    vpc_security_group_ids  = [aws_security_group.db_sg.id, var.eks_sg_node_id]
+    db_subnet_group_name    = aws_db_subnet_group.main.name
+    
+    tags = {
+        Name = "${var.project_name}-rds-instance-${var.environment}"
+    }
 }
  resource "aws_db_subnet_group" "main" {
    name = "db-group"
    subnet_ids = [var.database_subnet_id, var.private_subnet_id ]
+   
+    tags = {
+        Name = "${var.project_name}-rds-subnet-group-${var.environment}"
+    }
  }

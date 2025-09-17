@@ -7,35 +7,35 @@ resource "aws_vpc" "main" {
     Name = "main"
   }
 }
-resource "aws_subnet" "public" {
-  vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       =  "eu-west-2c" // fix
-
-  tags = {
-    Name = "bastion-host-subnet"
-    "kubernetes.io/role/elb" = "1"
-  }
-}
 
 resource "aws_subnet" "database" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.1.0/24"
-  availability_zone       =  "eu-west-2a"
+  availability_zone       =  "${var.server_location}a"
 
   tags = {
-    Name = "db-subnet"
+    Name = "RDS-subnet"
   }
 }
 
 resource "aws_subnet" "private" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.3.0/24"
-  availability_zone       =  "eu-west-2b"
+  availability_zone       =  "${var.server_location}b"
 
   tags = {
-    Name = "private-subnet"
+    Name = "${var.project_name}-private-subnet-${var.environment}"
     "kubernetes.io/role/internal-elb" = "1"
+  }
+}
+resource "aws_subnet" "public" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       =  "${var.server_location}c"
+
+  tags = {
+    Name = "${var.project_name}-bastion-host-subnet-${var.environment}"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 resource "aws_route_table" "private" {
@@ -47,7 +47,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "private-route-table"
+    Name = "${var.project_name}-private-route-table-${var.environment}"
   }
 }
 resource "aws_route_table_association" "private" {
@@ -81,12 +81,15 @@ resource "aws_security_group" "bastion_host_sg" {
     description   = "IPv4 route Open to Public Internet"
   }
   tags = {
-    Name = "bastion-host-SG"
+    Name = "${var.project_name}-bastion-host-SG-${var.environment}"
   }
 }
 
 resource "aws_internet_gateway" "this" {
   vpc_id = aws_vpc.main.id
+  tags = {
+    Name = "${var.project_name}-internet-gateway-${var.environment}"
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -94,6 +97,9 @@ resource "aws_route_table" "public" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.this.id
+  }
+  tags = {
+    Name = "${var.project_name}-public-route-table-${var.environment}"
   }
 }
 resource "aws_route_table_association" "public" {

@@ -14,18 +14,23 @@ module "networking" {
     project_name              = var.project_name
     environment               = var.environment
     bastion_host_id           = module.bastion_host.bastion_host_id
+    server_location           = var.server_location
 }
 
 module "eks" {
     source                  = "./modules/eks"
+    project_name            = var.project_name
+    environment             = var.environment
     bastion_host_subnet_id  = module.networking.public_subnet_id
     private_subnet_id       = module.networking.private_subnet_id
     eip_id                  = module.networking.eip_id
     vpc_id                  = module.networking.vpc_id
 }
 
-module "database" {
-    source                  = "./modules/database"
+module "RDS" {
+    source                  = "./modules/RDS"
+    project_name            = var.project_name
+    environment             = var.environment
     database_subnet_id      = module.networking.database_subnet_id
     private_subnet_id       = module.networking.private_subnet_id
     vpc_id                  = module.networking.vpc_id

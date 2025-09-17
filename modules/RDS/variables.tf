@@ -33,3 +33,9 @@ variable "db_pw" {
 variable "db_parameter_group" {
     type = string
 }
+variable "project_name" {
+    type = string
+}
+variable "environment" {
+    type = string
+}

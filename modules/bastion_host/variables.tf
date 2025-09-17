@@ -2,10 +2,6 @@
 variable "ec2-bastion-public-key-path" {
     type = string
 }
-variable "ec2-bastion-private-key-path" {
-    type        = string
-    sensitive   = true
-}
 variable "ec2-bastion-ingress-ip-1" {
     type        = string
     sensitive   = true

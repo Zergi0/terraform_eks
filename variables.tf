@@ -2,10 +2,6 @@
 variable "bastion_host_public_key" {
     type = string
 }
-variable "bastion_host_private_key" {
-    type        = string
-    sensitive   = true
-}
 variable "keyname" {
     type = string
 } 

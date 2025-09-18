@@ -2,10 +2,6 @@
 variable "bastion_host_public_key" {
     type = string
 }
-variable "bastion_host_private_key" {
-    type        = string
-    sensitive   = true
-}
 variable "keyname" {
     type = string
 } 
@@ -40,5 +36,8 @@ variable "db_pw" {
     sensitive   = true
 }
 variable "db_parameter_group" {
+    type = string
+}
+variable "server_location" {
     type = string
 }

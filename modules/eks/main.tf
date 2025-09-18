@@ -55,61 +55,21 @@ resource "aws_iam_role_policy_attachment" "ecr_read_policy" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
-resource "aws_security_group" "eks_cluster" {
-    vpc_id = var.vpc_id
-    
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port       = 443
-        to_port         = 443
-        protocol        = "tcp"
-        security_groups = [aws_security_group.eks_nodes.id]
-        description     = "Allow worker nodes to communicate with control plane"
-    }
-
-    tags = {
-        Name = "eks-cluster-sg"
-    }
-}
-
-resource "aws_security_group" "eks_nodes" {
-    vpc_id = var.vpc_id
-
-    egress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        self        = true
-    }
-    tags = {
-        Name = "eks-nodes-sg"
-    }
-}
 resource "aws_eks_cluster" "this" {
     name = "eks-cluster"
     role_arn = aws_iam_role.eks_cluster.arn
 
     vpc_config {
       subnet_ids = [var.bastion_host_subnet_id, var.private_subnet_id]
-      security_group_ids = [aws_security_group.eks_cluster.id]
+      security_group_ids = [var.eks_cluster_sg_id]
     }
     depends_on = [
         aws_iam_role_policy_attachment.eks_cluster_policy,
         aws_iam_role_policy_attachment.eks_service_policy
      ]
+    tags = {
+        Name = "${var.project_name}-eks-cluster-${var.environment}"
+    }
 }
 
 resource "aws_eks_node_group" "backend" {
@@ -135,4 +95,7 @@ resource "aws_eks_node_group" "backend" {
       aws_iam_role_policy_attachment.eks_worker_policy,
       aws_iam_role_policy_attachment.ecr_read_policy,
     ]
+    tags = {
+        Name = "${var.project_name}-eks-backend-nodes-${var.environment}"
+    }
 }

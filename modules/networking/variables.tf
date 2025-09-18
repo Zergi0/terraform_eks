@@ -1,12 +1,19 @@
-variable "bastion_host_subnet_id" {
-  type = string
+variable "ec2-bastion-ingress-ip-1" {
+    type        = string
+    sensitive   = true
 }
-variable "eip_id" {
-  type = string
+variable "project_name" {
+    type = string
 }
-variable "eip_allocation_id" {
-  type = string
+variable "environment" {
+    type = string
 }
-variable "aws_nat_gateway_id" {
+variable "bastion_host_instance_id" {
+    type = string
+}
+variable "server_location" {
+    type = string
+}
+variable "db_port" {
     type = string
 }

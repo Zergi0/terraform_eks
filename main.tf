@@ -24,9 +24,7 @@ module "eks" {
     environment             = var.environment
     bastion_host_subnet_id  = module.networking.public_subnet_id
     private_subnet_id       = module.networking.private_subnet_id
-    eip_id                  = module.networking.eip_id
-    vpc_id                  = module.networking.vpc_id
-    eks_cluser_sg_id        = module.networking.eks_cluser_sg_id
+    eks_cluster_sg_id       = module.networking.eks_cluster_sg_id
 }
 
 module "RDS" {

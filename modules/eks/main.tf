@@ -61,7 +61,7 @@ resource "aws_eks_cluster" "this" {
 
     vpc_config {
       subnet_ids = [var.bastion_host_subnet_id, var.private_subnet_id]
-      security_group_ids = [var.eks_cluser_sg_id]
+      security_group_ids = [var.eks_cluster_sg_id]
     }
     depends_on = [
         aws_iam_role_policy_attachment.eks_cluster_policy,

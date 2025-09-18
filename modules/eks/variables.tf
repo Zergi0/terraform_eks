@@ -1,12 +1,6 @@
 variable "bastion_host_subnet_id" {
   type = string
 }
-variable "eip_id" {
-  type = string
-}
-variable "vpc_id" {
-  type = string
-}
 variable "private_subnet_id" {
   type = string
 }
@@ -16,6 +10,6 @@ variable "project_name" {
 variable "environment" {
     type = string
 }
-variable "eks_cluser_sg_id" {
+variable "eks_cluster_sg_id" {
     type = string
 }

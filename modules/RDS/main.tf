@@ -1,4 +1,3 @@
-
 resource "aws_db_instance" "default" {
     allocated_storage       = 10
     db_name                 = var.db_name

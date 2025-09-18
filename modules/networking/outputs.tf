@@ -31,3 +31,9 @@ output "db_subnet_group_name" {
 output "eks_cluster_sg_id" {
     value = aws_security_group.eks_cluster.id
 }
+output "eks_sg_node_id" {
+    value = aws_security_group.eks_nodes.id
+}
+output "db_sg_id" {
+    value = aws_security_group.db_sg.id
+}

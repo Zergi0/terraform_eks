@@ -108,7 +108,7 @@ resource "aws_route_table_association" "public" {
 }
 
 resource "aws_eip" "ec2-bastion-host-eip" {
-  instance  = var.bastion_host_id
+  instance  = var.bastion_host_instance_id
   tags = {
     Name = "${var.project_name}-ec2-bastion-host-eip-${var.environment}"
   }
@@ -132,7 +132,7 @@ resource "aws_nat_gateway" "nat" {
 }
 
 resource "aws_eip_association" "ec2-bastion-host-eip-association" {
-    instance_id     = var.bastion_host_id
+    instance_id     = var.bastion_host_instance_id
     allocation_id   = aws_eip.ec2-bastion-host-eip.id
 }
 

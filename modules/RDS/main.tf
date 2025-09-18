@@ -8,7 +8,7 @@ resource "aws_db_instance" "default" {
     password                = var.db_pw
     parameter_group_name    = var.db_parameter_group
     skip_final_snapshot     = true
-    vpc_security_group_ids  = [aws_security_group.db_sg.id, var.eks_sg_node_id]
+    vpc_security_group_ids  = [var.db_sg_id, var.eks_sg_node_id]
     db_subnet_group_name    = var.db_subnet_group_name
     
     tags = {

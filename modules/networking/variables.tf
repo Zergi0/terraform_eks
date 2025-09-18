@@ -8,7 +8,7 @@ variable "project_name" {
 variable "environment" {
     type = string
 }
-variable "bastion_host_id" {
+variable "bastion_host_instance_id" {
     type = string
 }
 variable "server_location" {

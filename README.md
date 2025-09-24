@@ -5,7 +5,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Zergi0/terraform_eks/">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="160" height="160">
   </a>
 </div>
 
@@ -72,11 +72,14 @@ cd terraform_eks
 terraform init
 ```
 ```bash
-terraform apply
+terraform apply -auto-approve
 ```
-when prompted write yes
-
 ---
+**Destroy the resources when needed with:**
+```
+terraform destroy -auto-approve
+```
+
 
 ## 📬 Contact
 **Contributor:**  
